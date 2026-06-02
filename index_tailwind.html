@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Antrean Cerdas Puskesmas Bina Sehat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glass {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: 0 24px 50px -24px rgba(15, 23, 42, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div class="min-h-screen">
+    <!-- Top navigation / desktop header -->
+    <header class="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <div>
+          <a href="#" class="text-xl font-bold text-teal-700">Sistem Layanan Cerdas</a>
+          <p class="text-sm text-slate-500">Puskesmas Bina Sehat</p>
+        </div>
+        <nav class="hidden items-center gap-8 text-sm text-slate-600 md:flex">
+          <a href="#" class="hover:text-teal-700">Dashboard</a>
+          <a href="#" class="hover:text-teal-700">Riwayat</a>
+          <a href="#" class="hover:text-teal-700">Jadwal Dokter</a>
+          <a href="#" class="hover:text-teal-700">Bantuan</a>
+        </nav>
+        <div class="md:hidden flex items-center gap-2">
+          <button class="rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm text-slate-700 hover:bg-slate-200">
+            Menu
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div class="grid gap-6 xl:grid-cols-[1.2fr_0.9fr]">
+        <!-- LEFT COLUMN: HERO + FORM -->
+        <section class="space-y-6">
+          <div class="glass card card-pendaftaran overflow-hidden py-20 px-6 sm:px-8">
+            <div class="max-w-6xl mx-auto text-left">
+              <p class="text-sm uppercase tracking-wider text-teal-600 font-semibold mb-4">Sistem Pendaftaran</p>
+              <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                Sistem Antrean Cerdas Puskesmas Bina Sehat
+              </h1>
+              <p class="text-lg text-gray-600 max-w-2xl mb-12 leading-relaxed">
+                Fasilitas pendaftaran mandiri yang memudahkan Anda untuk mengambil nomor urut dan memantau antrean Poli serta IGD secara real-time. Layanan ini hadir untuk memberikan kenyamanan dan kepastian waktu pelayanan Anda.
+              </p>
+              <div class="flex flex-col md:flex-row gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex-1">
+                  <svg class="w-8 h-8 text-teal-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <h3 class="text-xl font-semibold mb-3">Pendaftaran Praktis</h3>
+                  <p class="text-gray-600 leading-relaxed">Proses pengisian data yang cepat dan mudah tanpa perlu berdesakan di loket administrasi.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex-1">
+                  <svg class="w-8 h-8 text-teal-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                  </svg>
+                  <h3 class="text-xl font-semibold mb-3">Informasi Terpusat</h3>
+                  <p class="text-gray-600 leading-relaxed">Pantau ketersediaan IGD dan panggilan antrean Poli secara bersamaan dalam satu layar utuh.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass card card-pendaftaran p-6 sm:p-8">
+            <div class="mb-6">
+              <h2 class="text-xl font-semibold text-slate-900">Formulir Pendaftaran</h2>
+              <p class="mt-2 text-sm text-slate-600">Isi data pasien untuk memulai proses antrean.</p>
+            </div>
+            <form id="pendaftaran-form" class="space-y-5">
+              <div class="mb-6 flex flex-wrap gap-2">
+                <span id="step-pill-1" class="rounded-full bg-teal-600 px-3 py-1 text-xs font-semibold text-white">1. Data Pasien</span>
+                <span id="step-pill-2" class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">2. Kondisi Kesehatan</span>
+                <span id="step-pill-3" class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">3. Pilih Gejala</span>
+              </div>
+
+              <div id="step-1" class="space-y-5">
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-700" for="nama">Nama Lengkap Pasien</label>
+                  <input id="nama" name="nama" type="text" placeholder="Masukkan nama lengkap" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-100" />
+                  <p id="nama-error" class="hidden text-red-500 text-sm mt-1"></p>
+                </div>
+                <div class="grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <label class="mb-2 block text-sm font-medium text-slate-700" for="umur">Umur Pasien</label>
+                    <input id="umur" name="umur" type="text" placeholder="Umur dalam tahun" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-100" />
+                    <p id="umur-error" class="hidden text-red-500 text-sm mt-1"></p>
+                  </div>
+                  <div>
+                    <label class="mb-2 block text-sm font-medium text-slate-700" for="jalur">Kategori pasien</label>
+                    <select id="jalur" name="jalur" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-100">
+                      <option value="" disabled selected>Pilih jalur</option>
+                      <option value="BPJS">BPJS Kesehatan</option>
+                      <option value="UM">Umum (Mandiri)</option>
+                      <option value="ASURANSI">Asuransi Swasta</option>
+                    </select>
+                  </div>
+                </div>
+                <button id="step1-next" type="button" class="inline-flex w-full items-center justify-center rounded-2xl bg-teal-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition hover:bg-teal-700">
+                  Lanjut ke Skrining
+                </button>
+              </div>
+
+              <div id="step-2" class="hidden space-y-5">
+                <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                  <p class="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">Kondisi Kesehatan</p>
+                  <h3 class="mt-4 text-xl font-semibold text-slate-900">Apakah pasien dalam keadaan sehat?</h3>
+                  <p class="mt-2 text-sm text-slate-600">Jika tidak, sistem akan langsung mencetak struk darurat dan mendaftarkan pasien ke IGD.</p>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <button id="healthy-yes" type="button" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100">Iya, pasien sehat</button>
+                  <button id="healthy-no" type="button" class="inline-flex items-center justify-center rounded-2xl bg-rose-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-rose-700">Tidak, pasien tidak sehat</button>
+                </div>
+                <button id="step2-back" type="button" class="inline-flex w-full items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100">
+                  ⟵ Kembali ke data pasien
+                </button>
+              </div>
+
+              <div id="step-3" class="hidden space-y-5">
+                <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                  <p class="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">Gejala</p>
+                  <h3 class="mt-4 text-xl font-semibold text-slate-900">Pilih keluhan yang dialami pasien</h3>
+                  <p class="mt-2 text-sm text-slate-600">Klik baris berikut untuk memilih keluhan utama atau gejala yang paling terasa.</p>
+                </div>
+                <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                  <table class="min-w-full divide-y divide-slate-200 text-sm text-slate-700">
+                    <thead class="bg-slate-50 text-left text-xs uppercase tracking-[0.2em] text-slate-500">
+                      <tr>
+                        <th class="px-4 py-3">Pilih</th>
+                        <th class="px-4 py-3">Keluhan / Gejala</th>
+                      </tr>
+                    </thead>
+                    <tbody id="symptom-list" class="divide-y divide-slate-200 bg-white">
+                      <tr class="cursor-pointer hover:bg-slate-50" data-value="Demam">
+                        <td class="px-4 py-3"><input type="checkbox" name="symptom" value="Demam" class="symptom-checkbox h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" /></td>
+                        <td class="px-4 py-3">Demam</td>
+                      </tr>
+                      <tr class="cursor-pointer hover:bg-slate-50" data-value="Sakit Kepala">
+                        <td class="px-4 py-3"><input type="checkbox" name="symptom" value="Sakit Kepala" class="symptom-checkbox h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" /></td>
+                        <td class="px-4 py-3">Sakit Kepala</td>
+                      </tr>
+                      <tr class="cursor-pointer hover:bg-slate-50" data-value="Batuk">
+                        <td class="px-4 py-3"><input type="checkbox" name="symptom" value="Batuk" class="symptom-checkbox h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" /></td>
+                        <td class="px-4 py-3">Batuk</td>
+                      </tr>
+                      <tr class="cursor-pointer hover:bg-slate-50" data-value="Sesak Napas">
+                        <td class="px-4 py-3"><input type="checkbox" name="symptom" value="Sesak Napas" class="symptom-checkbox h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" /></td>
+                        <td class="px-4 py-3">Sesak Napas</td>
+                      </tr>
+                      <tr class="cursor-pointer hover:bg-slate-50" data-value="Nyeri Dada">
+                        <td class="px-4 py-3"><input type="checkbox" name="symptom" value="Nyeri Dada" class="symptom-checkbox h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" /></td>
+                        <td class="px-4 py-3">Nyeri Dada</td>
+                      </tr>
+                      <tr class="cursor-pointer hover:bg-slate-50" data-value="Pusing">
+                        <td class="px-4 py-3"><input type="checkbox" name="symptom" value="Pusing" class="symptom-checkbox h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" /></td>
+                        <td class="px-4 py-3">Pusing</td>
+                      </tr>
+                      <tr class="cursor-pointer hover:bg-slate-50" data-value="Mual / Muntah">
+                        <td class="px-4 py-3"><input type="checkbox" name="symptom" value="Mual / Muntah" class="symptom-checkbox h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" /></td>
+                        <td class="px-4 py-3">Mual / Muntah</td>
+                      </tr>
+                      <tr class="cursor-pointer hover:bg-slate-50" data-value="Sakit Tenggorokan">
+                        <td class="px-4 py-3"><input type="checkbox" name="symptom" value="Sakit Tenggorokan" class="symptom-checkbox h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" /></td>
+                        <td class="px-4 py-3">Sakit Tenggorokan</td>
+                      </tr>
+                      <tr class="cursor-pointer hover:bg-slate-50" data-value="Diare">
+                        <td class="px-4 py-3"><input type="checkbox" name="symptom" value="Diare" class="symptom-checkbox h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" /></td>
+                        <td class="px-4 py-3">Diare</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-700" for="keluhan_lain">Keluhan lain (opsional)</label>
+                  <input id="keluhan_lain" type="text" placeholder="Contoh: nyeri perut, pegal" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-100" />
+                </div>
+                <div id="form-message" class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 hidden"></div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <button id="step3-back" type="button" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100">⟵ Kembali ke skrining</button>
+                  <button id="btnDaftar" type="button" class="inline-flex items-center justify-center rounded-2xl bg-teal-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition hover:bg-teal-700">Daftar Sekarang</button>
+                </div>
+              </div>
+            </form>
+            <div id="receipt-card" class="glass mt-6 hidden p-6 sm:p-8">
+              <div class="mb-5">
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-teal-700">Struk Pendaftaran</p>
+                <h3 class="mt-3 text-xl font-semibold text-slate-900">Detail Antrean Pasien</h3>
+              </div>
+              <div class="grid gap-3 text-sm text-slate-700">
+                <div class="flex justify-between rounded-2xl bg-slate-50 px-4 py-3"><span>Nomor Antrean</span><strong id="r-nomor">-</strong></div>
+                <div class="flex justify-between rounded-2xl bg-slate-50 px-4 py-3"><span>Nama Pasien</span><span id="r-nama">-</span></div>
+                <div class="flex justify-between rounded-2xl bg-slate-50 px-4 py-3"><span>Umur</span><span id="r-umur">-</span></div>
+                <div class="flex justify-between rounded-2xl bg-slate-50 px-4 py-3"><span>Ruang / Poli</span><span id="r-poli">-</span></div>
+                <div class="flex justify-between rounded-2xl bg-slate-50 px-4 py-3"><span>Jalur</span><span id="r-jalur">-</span></div>
+                <div class="flex justify-between rounded-2xl bg-slate-50 px-4 py-3"><span>Keluhan</span><span id="r-keluhan" class="max-w-[55%] text-right italic">-</span></div>
+                <div class="flex justify-between rounded-2xl bg-slate-50 px-4 py-3"><span>Estimasi</span><span id="r-estimasi" class="font-semibold text-teal-700">-</span></div>
+                <div class="flex justify-between rounded-2xl bg-slate-50 px-4 py-3"><span>Status Darurat</span><span id="r-darurat">-</span></div>
+                <div class="bg-slate-100 rounded-2xl px-4 py-3 text-sm text-slate-600"><span id="r-pesan">-</span></div>
+              </div>
+              <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+                <button id="print-receipt" type="button" class="inline-flex w-full items-center justify-center rounded-2xl bg-slate-800 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-900">🖨️ Cetak Struk</button>
+                <button id="reset-receipt" type="button" class="inline-flex w-full items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">Selesai</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- RIGHT COLUMN: INFO PANEL + LIVE MONITOR + QUOTA -->
+        <aside class="space-y-6">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <article class="glass card card-live p-5">
+              <p class="text-sm font-semibold uppercase tracking-[0.24em] text-teal-700">Live Update</p>
+              <h3 class="mt-4 text-lg font-semibold text-slate-900">Data antrean real-time</h3>
+              <p class="mt-3 text-sm leading-6 text-slate-600">Status panggilan antrean untuk semua Poli dan IGD selalu diperbarui secara otomatis dari waktu ke waktu.</p>
+            </article>
+            <article class="glass card card-kuota p-5">
+              <p class="text-sm font-semibold uppercase tracking-[0.24em] text-orange-600">Kuota IGD</p>
+              <h3 class="mt-4 text-lg font-semibold text-slate-900">Hanya 5 slot aktif</h3>
+              <p class="mt-3 text-sm leading-6 text-slate-600">Kapasitas maksimal IGD Puskesmas Bina Sehat saat ini adalah 5 slot. Mohon selalu pantau sisa ketersediaan kuota.</p>
+            </article>
+          </div>
+
+          <div class="glass card card-monitor p-6 sm:p-8">
+            <div class="mb-6 flex items-center justify-between gap-4">
+              <div>
+                <h2 class="text-xl font-semibold text-slate-900">Live Monitor Status Antrean</h2>
+                <p class="mt-2 text-sm text-slate-600">Lihat jalur mana yang sedang melayani pasien saat ini.</p>
+              </div>
+              <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">Realtime</span>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">Poli Umum</p>
+                <p id="live-umum" class="mt-4 text-4xl font-bold text-slate-900">12</p>
+                <p class="mt-2 text-sm text-slate-600">Sedang diperiksa</p>
+              </div>
+              <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">Poli Anak</p>
+                <p id="live-anak" class="mt-4 text-4xl font-bold text-slate-900">20/20</p>
+                <p class="mt-2 text-sm text-slate-600">Sedang diperiksa</p>
+              </div>
+              <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">Poli Lansia</p>
+                <p id="live-lansia" class="mt-4 text-4xl font-bold text-slate-900">8</p>
+                <p class="mt-2 text-sm text-slate-600">Sedang diperiksa</p>
+              </div>
+              <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-rose-600">IGD</p>
+                <p id="live-igd" class="mt-4 text-4xl font-bold text-slate-900">5/5</p>
+                <p class="mt-2 text-sm text-slate-600">kuota tersisa</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass card card-info p-6 sm:p-8">
+            <div class="mb-5">
+              <h2 class="text-xl font-semibold text-slate-900">Sisa Kuota Pendaftaran</h2>
+              <p class="mt-2 text-sm text-slate-600">Kuota harian per poli masih tersedia untuk pasien.</p>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <div class="mb-2 flex items-center justify-between text-sm font-medium text-slate-700">
+                  <span>Poli Anak</span>
+                  <span id="poli-anak-label">20/20 tersisa</span>
+                </div>
+                <div class="h-3 overflow-hidden rounded-full bg-slate-200">
+                  <div id="poli-anak-bar" class="h-full rounded-full bg-teal-600" style="width: 100%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="mb-2 flex items-center justify-between text-sm font-medium text-slate-700">
+                  <span>Poli Umum</span>
+                  <span id="poli-umum-label">18/20 tersisa</span>
+                </div>
+                <div class="h-3 overflow-hidden rounded-full bg-slate-200">
+                  <div id="poli-umum-bar" class="h-full rounded-full bg-cyan-500" style="width: 90%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="mb-2 flex items-center justify-between text-sm font-medium text-slate-700">
+                  <span>Poli Lansia</span>
+                  <span id="poli-lansia-label">15/20 tersisa</span>
+                </div>
+                <div class="h-3 overflow-hidden rounded-full bg-slate-200">
+                  <div id="poli-lansia-bar" class="h-full rounded-full bg-sky-500" style="width: 75%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+  <script>
+    const formElement = document.getElementById('pendaftaran-form');
+    const submitButton = document.getElementById('btnDaftar');
+    const messageBox = document.getElementById('form-message');
+    const receiptCard = document.getElementById('receipt-card');
+    const printReceipt = document.getElementById('print-receipt');
+    const resetReceipt = document.getElementById('reset-receipt');
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    const step3 = document.getElementById('step-3');
+    const stepPill1 = document.getElementById('step-pill-1');
+    const stepPill2 = document.getElementById('step-pill-2');
+    const stepPill3 = document.getElementById('step-pill-3');
+    const symptomList = document.getElementById('symptom-list');
+
+    const updateText = (selector, value) => {
+      const el = document.getElementById(selector);
+      if (el) el.textContent = value;
+    };
+
+    const setFieldError = (field, message) => {
+      const errorEl = document.getElementById(`${field.id}-error`);
+      field.classList.remove('border-slate-200', 'focus:border-teal-400', 'focus:ring-teal-100');
+      field.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+      if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.classList.remove('hidden');
+      }
+    };
+
+    const clearFieldError = (field) => {
+      const errorEl = document.getElementById(`${field.id}-error`);
+      field.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+      field.classList.add('border-slate-200', 'focus:border-teal-400', 'focus:ring-teal-100');
+      if (errorEl) {
+        errorEl.textContent = '';
+        errorEl.classList.add('hidden');
+      }
+    };
+
+    const isNameValid = () => {
+      const field = document.getElementById('nama');
+      if (!field) return false;
+      const value = field.value.trim();
+      const normalized = value.replace(/\s+/g, '');
+      const invalidChars = /[^A-Za-z ]/.test(value);
+      return value.length >= 4 && normalized.length >= 4 && !invalidChars && /[A-Za-z]/.test(normalized);
+    };
+
+    const isAgeValid = () => {
+      const field = document.getElementById('umur');
+      if (!field) return false;
+      const value = field.value.trim();
+      if (!/^[0-9]+$/.test(value)) return false;
+      const numeric = parseInt(value, 10);
+      return numeric > 0;
+    };
+
+    function validateName(showFeedback = true) {
+      const field = document.getElementById('nama');
+      if (!field) return false;
+      const value = field.value.trim();
+      const normalized = value.replace(/\s+/g, '');
+      const invalidChars = /[^A-Za-z ]/.test(value);
+      if (!value || normalized.length < 4 || invalidChars) {
+        if (showFeedback) {
+          setFieldError(field, 'Nama minimal 4 huruf dan tidak boleh berisi angka.');
+        }
+        return false;
+      }
+      clearFieldError(field);
+      return true;
+    }
+
+    function validateAge(showFeedback = true) {
+      const field = document.getElementById('umur');
+      if (!field) return false;
+      const value = field.value.trim();
+      if (!/^[0-9]+$/.test(value)) {
+        if (showFeedback) {
+          setFieldError(field, 'Umur harus angka bulat, tanpa desimal atau huruf.');
+        }
+        return false;
+      }
+      const numeric = parseInt(value, 10);
+      if (numeric <= 0) {
+        if (showFeedback) {
+          setFieldError(field, 'Umur harus lebih besar dari 0.');
+        }
+        return false;
+      }
+      clearFieldError(field);
+      return true;
+    }
+
+    const updateButtonState = () => {
+      const step1NextBtn = document.getElementById('step1-next');
+      const jalur = document.getElementById('jalur')?.value;
+      const valid = isNameValid() && isAgeValid() && Boolean(jalur);
+      if (step1NextBtn) {
+        step1NextBtn.disabled = !valid;
+        if (valid) {
+          step1NextBtn.classList.remove('bg-slate-300', 'cursor-not-allowed');
+          step1NextBtn.classList.add('bg-teal-600');
+        } else {
+          step1NextBtn.classList.add('bg-slate-300', 'cursor-not-allowed');
+          step1NextBtn.classList.remove('bg-teal-600');
+        }
+      }
+      if (submitButton) {
+        submitButton.disabled = !valid;
+        if (valid) {
+          submitButton.classList.remove('bg-slate-300', 'cursor-not-allowed');
+          submitButton.classList.add('bg-teal-600');
+        } else {
+          submitButton.classList.add('bg-slate-300', 'cursor-not-allowed');
+          submitButton.classList.remove('bg-teal-600');
+        }
+      }
+      return valid;
+    };
+
+    const scrollToFirstInvalid = () => {
+      const firstError = document.querySelector('#nama-error:not(.hidden), #umur-error:not(.hidden)');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const fieldId = firstError.id.replace('-error', '');
+        const field = document.getElementById(fieldId);
+        if (field) field.focus();
+      }
+    };
+
+    const setActiveStep = (step) => {
+      step1.classList.toggle('hidden', step !== 1);
+      step2.classList.toggle('hidden', step !== 2);
+      step3.classList.toggle('hidden', step !== 3);
+      stepPill1.classList.toggle('bg-teal-600', step === 1);
+      stepPill1.classList.toggle('text-white', step === 1);
+      stepPill1.classList.toggle('bg-slate-100', step !== 1);
+      stepPill1.classList.toggle('text-slate-700', step !== 1);
+      stepPill2.classList.toggle('bg-teal-600', step === 2);
+      stepPill2.classList.toggle('text-white', step === 2);
+      stepPill2.classList.toggle('bg-slate-100', step !== 2);
+      stepPill2.classList.toggle('text-slate-700', step !== 2);
+      stepPill3.classList.toggle('bg-teal-600', step === 3);
+      stepPill3.classList.toggle('text-white', step === 3);
+      stepPill3.classList.toggle('bg-slate-100', step !== 3);
+      stepPill3.classList.toggle('text-slate-700', step !== 3);
+    };
+
+    const toggleSymptomRow = (row) => {
+      const checkbox = row.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+      }
+    };
+
+    symptomList.querySelectorAll('tr').forEach((row) => {
+      row.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target.tagName.toLowerCase() === 'input') return;
+        toggleSymptomRow(row);
+      });
+    });
+
+    const updateProgress = (barId, labelId, data) => {
+      const bar = document.getElementById(barId);
+      const label = document.getElementById(labelId);
+      const remaining = data.remaining ?? data.sisa;
+      const max = data.max ?? data.kuota_max;
+      const percent = data.percent ?? (max > 0 ? Math.round((remaining / max) * 100) : 0);
+      if (bar) bar.style.width = `${percent}%`;
+      if (label) label.textContent = `${remaining}/${max} tersisa`;
+    };
+
+    async function refreshLiveData() {
+      try {
+        const [statusRes, quotaRes] = await Promise.all([
+          fetch('/api/status_all'),
+          fetch('/api/kuota_status')
+        ]);
+        if (!statusRes.ok || !quotaRes.ok) throw new Error('Gagal memuat data');
+
+        const status = await statusRes.json();
+        const kuota = await quotaRes.json();
+
+        updateText('live-umum', status['Poli Umum']?.sekarang ?? '-');
+        updateText('live-anak', status['Poli Anak']?.sekarang ?? '-');
+        updateText('live-lansia', status['Poli Lansia']?.sekarang ?? '-');
+
+        const igdActive = (status['IGD (DARURAT)']?.waiting || 0) + (status['IGD (GEJALA BERAT)']?.waiting || 0);
+        const igdMax = {{ igd_max }};
+        const igdRemaining = Math.max(0, igdMax - igdActive);
+        updateText('live-igd', `${igdRemaining}/${igdMax}`);
+
+        // Update kuota per poli (menggunakan API baru yang mengembalikan kuota per nama poli)
+        const poliAnak = kuota['Poli Anak']?.sisa ?? 20;
+        const poliUmum = kuota['Poli Umum']?.sisa ?? 20;
+        const poliLansia = kuota['Poli Lansia']?.sisa ?? 20;
+        
+        updateText('poli-anak-label', `${poliAnak}/20 tersisa`);
+        updateText('poli-umum-label', `${poliUmum}/20 tersisa`);
+        updateText('poli-lansia-label', `${poliLansia}/20 tersisa`);
+        
+        document.getElementById('poli-anak-bar').style.width = `${(poliAnak / 20) * 100}%`;
+        document.getElementById('poli-umum-bar').style.width = `${(poliUmum / 20) * 100}%`;
+        document.getElementById('poli-lansia-bar').style.width = `${(poliLansia / 20) * 100}%`;
+        
+        checkQuotaAndDisableButton();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function getSelectedSymptoms() {
+      const checked = Array.from(document.querySelectorAll('input[name="symptom"]:checked'));
+      return checked.map((item) => item.value);
+    }
+
+    function getAdditionalKeluhan() {
+      return document.getElementById('keluhan_lain').value.trim();
+    }
+
+    function hideReceipt() {
+      if (receiptCard) receiptCard.classList.add('hidden');
+    }
+
+    function showReceipt(data) {
+      if (!receiptCard) return;
+      if (formElement) formElement.classList.add('hidden');
+      updateText('r-nomor', data.nomor_antrian || '-');
+      updateText('r-nama', data.nama || '-');
+      updateText('r-umur', data.umur || '-');
+      updateText('r-poli', data.poli || '-');
+      updateText('r-jalur', data.jalur || '-');
+      updateText('r-keluhan', data.keluhan || '-');
+      updateText('r-estimasi', data.estimasi || '-');
+      updateText('r-darurat', data.is_darurat ? 'Ya' : 'Tidak');
+      updateText('r-pesan', data.pesan_khusus || 'Terima kasih telah mendaftar. Silakan tunggu informasi selanjutnya.');
+      receiptCard.classList.remove('hidden');
+    }
+
+    function showMessage(text, type = 'error') {
+      if (!messageBox) return;
+      messageBox.textContent = text;
+      messageBox.style.whiteSpace = 'pre-line';
+      messageBox.classList.remove('hidden', 'border-green-300', 'bg-green-50', 'text-green-700', 'border-rose-300', 'bg-rose-50', 'text-rose-700');
+      if (type === 'success') {
+        messageBox.classList.add('border-green-300', 'bg-green-50', 'text-green-700');
+      } else {
+        messageBox.classList.add('border-rose-300', 'bg-rose-50', 'text-rose-700');
+      }
+    }
+
+    async function submitPatientData({ nama, umur, jalur, isDarurat, keluhan }) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Mengirim...';
+      try {
+        const response = await fetch('/api/daftar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nama, umur, jalur, is_darurat: isDarurat, keluhan })
+        });
+        const result = await response.json();
+
+        if (!result.sukses) {
+          showMessage(result.msg || 'Pendaftaran gagal. Silakan coba lagi.');
+          hideReceipt();
+          return;
+        }
+
+        showMessage(`Berhasil mendaftar. Nomor antrean: ${result.nomor_antrian}. Estimasi: ${result.estimasi}`, 'success');
+        showReceipt(result);
+        refreshLiveData();
+      } catch (error) {
+        showMessage('Terjadi kesalahan jaringan. Silakan coba lagi.');
+        hideReceipt();
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Daftar Sekarang';
+      }
+    }
+
+    function validateStep1() {
+      const validNama = validateName(true);
+      const validUmur = validateAge(true);
+      const jalur = document.getElementById('jalur').value;
+      const validJalur = Boolean(jalur);
+      if (!validJalur) {
+        showMessage('Pilih kategori pasien terlebih dahulu.');
+      } else {
+        messageBox.classList.add('hidden');
+      }
+      const valid = validNama && validUmur && validJalur;
+      if (!valid) {
+        scrollToFirstInvalid();
+      }
+      updateButtonState();
+      return valid;
+    }
+
+    function handleHealthyChoice(isHealthy) {
+      if (!validateStep1()) return;
+      if (isHealthy) {
+        setActiveStep(3);
+      } else {
+        const nama = document.getElementById('nama').value.trim();
+        const umur = document.getElementById('umur').value;
+        const jalur = document.getElementById('jalur').value;
+        submitPatientData({ nama, umur, jalur, isDarurat: true, keluhan: ['Kondisi tidak sehat'] });
+      }
+    }
+
+    function handleStep3Submit() {
+      const validNama = validateName(true);
+      const validUmur = validateAge(true);
+      const jalur = document.getElementById('jalur').value;
+      if (!validNama || !validUmur || !jalur) {
+        if (!jalur) {
+          showMessage('Pilih kategori pasien terlebih dahulu.');
+        }
+        scrollToFirstInvalid();
+        return;
+      }
+      const nama = document.getElementById('nama').value.trim();
+      const umur = document.getElementById('umur').value;
+      const symptoms = getSelectedSymptoms();
+      const other = getAdditionalKeluhan();
+      if (symptoms.length === 0 && !other) {
+        showMessage('Pilih minimal satu gejala atau tulis keluhan lain.');
+        hideReceipt();
+        return;
+      }
+      const allKeluhan = [...symptoms];
+      if (other) allKeluhan.push(other);
+      submitPatientData({ nama, umur, jalur, isDarurat: false, keluhan: allKeluhan });
+    }
+
+    submitButton.addEventListener('click', handleStep3Submit);
+
+    // Function untuk check kuota dan disable button jika semua poli penuh
+    function checkQuotaAndDisableButton() {
+      const step1NextBtn = document.getElementById('step1-next');
+
+      // Baca sisa kuota dari setiap poli
+      const getPoliAnak = () => {
+        const label = document.getElementById('poli-anak-label')?.textContent || '0/20';
+        return parseInt(label.split('/')[0]) || 0;
+      };
+      const getPoliUmum = () => {
+        const label = document.getElementById('poli-umum-label')?.textContent || '0/20';
+        return parseInt(label.split('/')[0]) || 0;
+      };
+      const getPoliLansia = () => {
+        const label = document.getElementById('poli-lansia-label')?.textContent || '0/20';
+        return parseInt(label.split('/')[0]) || 0;
+      };
+
+      const anak = getPoliAnak();
+      const umum = getPoliUmum();
+      const lansia = getPoliLansia();
+
+      // Disable button jika semua poli kuotanya habis (0/20)
+      const allPoliFullyBooked = anak === 0 && umum === 0 && lansia === 0;
+      step1NextBtn.disabled = allPoliFullyBooked;
+      step1NextBtn.title = allPoliFullyBooked ? 'Semua poli sudah penuh' : 'Lanjut ke skrining';
+    }
+
+    document.getElementById('step1-next').addEventListener('click', () => {
+      if (validateStep1()) {
+        setActiveStep(2);
+      }
+    });
+
+    const namaField = document.getElementById('nama');
+    const umurField = document.getElementById('umur');
+    const jalurField = document.getElementById('jalur');
+    if (namaField) {
+      namaField.addEventListener('input', () => { validateName(false); updateButtonState(); });
+      namaField.addEventListener('blur', () => { validateName(true); updateButtonState(); });
+    }
+    if (umurField) {
+      umurField.addEventListener('input', () => { validateAge(false); updateButtonState(); });
+      umurField.addEventListener('blur', () => { validateAge(true); updateButtonState(); });
+    }
+    if (jalurField) {
+      jalurField.addEventListener('change', updateButtonState);
+    }
+
+    // Check kuota saat halaman dimuat
+    checkQuotaAndDisableButton();
+    updateButtonState();
+    document.getElementById('step2-back').addEventListener('click', () => setActiveStep(1));
+    document.getElementById('healthy-yes').addEventListener('click', () => handleHealthyChoice(true));
+    document.getElementById('healthy-no').addEventListener('click', () => handleHealthyChoice(false));
+    document.getElementById('step3-back').addEventListener('click', () => setActiveStep(2));
+    if (printReceipt) {
+      printReceipt.addEventListener('click', () => window.print());
+    }
+    if (resetReceipt) {
+      resetReceipt.addEventListener('click', () => {
+        formElement.reset();
+        if (formElement) formElement.classList.remove('hidden');
+        messageBox.classList.add('hidden');
+        hideReceipt();
+        setActiveStep(1);
+        document.querySelectorAll('input[name="symptom"]').forEach((el) => (el.checked = false));
+      });
+    }
+    window.addEventListener('load', () => {
+      setActiveStep(1);
+      refreshLiveData();
+      setInterval(refreshLiveData, 6000);
+    });
+  </script>
+</body>
+</html>

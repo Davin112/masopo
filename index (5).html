@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puskesmas Bina Sehat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="hero-section">
+            <div class="hero-intro">
+                <span class="eyebrow">Sistem Antrean Cerdas</span>
+                <h1>Puskesmas Bina Sehat</h1>
+                <p>Daftar online dan pantau antrean secara real-time. Sistem ini membantu pasien, petugas, dan keluarga melihat status layanan dengan cepat.</p>
+            </div>
+            <div class="hero-cards">
+                <div class="summary-card summary-card--info">
+                    <h3>Live Update</h3>
+                    <p>Antrean IGD dan Poli terpantau otomatis setiap beberapa detik.</p>
+                </div>
+                <div class="summary-card summary-card--warning">
+                    <h3>Kuota IGD</h3>
+                    <p>Hanya 5 slot aktif. Saat penuh, sistem akan menampilkan pesan peringatan.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MONITOR LIVE ANTREAN -->
+        <div class="card">
+            <h2>📢 Antrean Sedang Diperiksa - Per Unit Medis</h2>
+            <div class="live-grid">
+                <!-- Poli Umum -->
+                <div class="live-box-wrapper">
+                    <div class="live-color-box" style="--live-color: #3b82f6;"></div>
+                    <div class="live-box" style="--live-bg: rgba(59,130,246,0.07); --live-color:#3b82f6;">
+                        <h4>Poli Umum</h4>
+                        <div class="number" id="live-umum">-</div>
+                        <div class="live-message" id="msg-umum"></div>
+                    </div>
+                </div>
+                <!-- Poli Anak -->
+                <div class="live-box-wrapper">
+                    <div class="live-color-box" style="--live-color: #f50c81;"></div>
+                    <div class="live-box" style="--live-bg: rgba(236,73,153,0.08); --live-color:#ec4899;">
+                        <h4>Poli Anak</h4>
+                        <div class="number" id="live-anak">-</div>
+                        <div class="live-message" id="msg-anak"></div>
+                    </div>
+                </div>
+                <!-- Poli Lansia -->
+                <div class="live-box-wrapper">
+                    <div class="live-color-box" style="--live-color: #f59e0b;"></div>
+                    <div class="live-box" style="--live-bg: rgba(245,158,11,0.08); --live-color:#f59e0b;">
+                        <h4>Poli Lansia</h4>
+                        <div class="number" id="live-lansia">-</div>
+                        <div class="live-message" id="msg-lansia"></div>
+                    </div>
+                </div>
+                <!-- IGD Total -->
+                <div class="live-box-wrapper">
+                    <div class="live-color-box" style="--live-color: #dc2626;"></div>
+                    <div class="live-box" style="--live-bg: rgba(220,38,38,0.08); --live-color:#dc2626;">
+                        <h4>IGD</h4>
+                        <div class="number" id="live-igd">5/5</div>
+                        <div class="live-message" id="msg-igd"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORMULIR MULTI-STEP -->
+        <div class="card" id="form-card">
+            <h2>📝 Formulir Masuk Pasien</h2>
+
+            <form id="pendaftaran-form">
+
+                <!-- STEP 1: DATA DIRI -->
+                <div id="step-1" class="step-container active">
+                    <div class="form-group">
+                        <label>Nama Lengkap Pasien</label>
+                        <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Umur Pasien (Tahun)</label>
+                        <input type="number" id="umur" placeholder="Menentukan tujuan poli" required min="1" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Pilih Jalur Penjaminan Medis</label>
+                        <select id="jalur" required>
+                            <option value="" disabled selected>-- Pilih Jalur --</option>
+                            <option value="BPJS" id="opt-bpjs">BPJS Kesehatan</option>
+                            <option value="UM" id="opt-um">Umum (Mandiri)</option>
+                            <option value="ASURANSI" id="opt-asu">Asuransi Swasta</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn" onclick="keStep2()">Lanjut Skrining ➔</button>
+                </div>
+
+                <!-- STEP 2: SKRINING DARURAT -->
+                <div id="step-2" class="step-container" style="text-align: center; padding: 10px 0;">
+                    <div style="font-size: 40px; margin-bottom: 10px;">🚨</div>
+                    <h3 style="margin-top: 0; color: #0f172a;">Apakah Pasien Mengalami Gawat Darurat?</h3>
+                    <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">
+                        Contoh: Pendarahan parah, sesak napas berat, hilang kesadaran, kejang, atau kecelakaan hebat.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button type="button" class="btn btn-danger" onclick="prosesDarurat()">YA, KONDISI DARURAT!</button>
+                        <button type="button" class="btn btn-outline" onclick="keStep3()">Tidak, Antre Normal Saja</button>
+                    </div>
+                    <button type="button" style="background:none; border:none; color:#3b82f6; margin-top:15px; cursor:pointer; font-weight:600;" onclick="kembaliKe(1)">⟵ Kembali ubah data</button>
+                </div>
+
+                <!-- STEP 3: INPUT KELUHAN TABEL -->
+                <div id="step-3" class="step-container">
+                    <h3 style="margin-top: 0; color: #0f172a;">Pilih Keluhan Utama / Gejala</h3>
+                    <div class="tabel-wrapper">
+                        <table class="tabel-keluhan">
+                            <thead>
+                                <tr>
+                                    <th width="60">Pilih</th>
+                                    <th>Keluhan / Gejala</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox" name="keluhan" value="Demam" id="k1"></td>
+                                    <td><label for="k1">Demam</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="keluhan" value="Batuk Berdahak" id="k2"></td>
+                                    <td><label for="k2">Batuk Berdahak</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="keluhan" value="Pusing" id="k3"></td>
+                                    <td><label for="k3">Pusing</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="keluhan" value="Mual/Muntah" id="k4"></td>
+                                    <td><label for="k4">Mual/Muntah</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="keluhan" value="Sesak Napas" id="k5"></td>
+                                    <td><label for="k5">Sesak Napas</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="keluhan" value="Nyeri Dada" id="k6"></td>
+                                    <td><label for="k6">Nyeri Dada</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" name="keluhan" value="Lainnya" id="k7"></td>
+                                    <td><input type="text" id="keluhan_lain" placeholder="Tulis keluhan lain..."></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="btn" style="margin-top: 20px;" onclick="prosesNormal()">Daftar Ambil Antrean ✔️</button>
+                    <div style="text-align: center;">
+                        <button type="button" style="background:none; border:none; color:#64748b; margin-top:15px; cursor:pointer;" onclick="kembaliKe(2)">⟵ Kembali ke Skrining</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- TAMPILAN STRUK HASIL -->
+        <div class="card" id="receipt-card" style="display: none;">
+            <div id="receipt">
+                <h3 id="r-judul" style="margin:0; font-weight: 800;">BERHASIL MENDAFTAR</h3>
+                <p id="r-pesan" style="margin:6px 0; font-size:13px; font-weight:600; padding: 8px; border-radius:6px;"></p>
+                <hr style="border: 1px dashed #cbd5e1; margin:15px 0;">
+
+                <div class="receipt-detail">
+                    <div class="receipt-row"><span>Waktu Daftar</span><span id="r-waktu">-</span></div>
+                    <div class="receipt-row"><span>Nama Pasien</span><span id="r-nama">-</span></div>
+                    <div class="receipt-row"><span>Umur</span><span id="r-umur">-</span></div>
+                    <div class="receipt-row"><span id="r-ruang-label">Ruang / Loket</span><span id="r-poli" style="font-weight:700;">-</span></div>
+                    <div class="receipt-row"><span>Jalur</span><span id="r-jalur">-</span></div>
+                    <div class="receipt-row"><span>Nomor Antrian</span><span id="r-nomor" class="nomor-besar">-</span></div>
+                    <div class="receipt-row"><span>Keluhan</span><span id="r-keluhan" style="font-style: italic;">-</span></div>
+                    <div id="box-estimasi" class="receipt-row" style="padding:12px 0 0 0; border-top:1px dashed #cbd5e1; margin-top:8px;">
+                        <span>Estimasi Waktu</span><span id="r-estimasi" style="color:#f59e0b; font-weight:700;">-</span>
+                    </div>
+                </div>
+
+                <img id="r-qr" src="" alt="QR Code">
+                <div class="action-buttons">
+                    <button type="button" onclick="window.print()" class="btn" style="background:#64748b; flex:1;">🖨️ Cetak</button>
+                </div>
+                <button type="button" onclick="resetFormSeluruhnya()" class="btn" style="margin-top:12px; background:#e2e8f0; color:#334155;">Selesai (Kembali ke Awal)</button>
+            </div>
+        </div>
+
+        <!-- SISA KUOTA -->
+        <div class="card">
+            <h2>📊 Sisa Kuota Pendaftaran Per Poli - Hari Ini</h2>
+            <div id="quota-container">
+                <div class="quota-bar-container">
+                    <div class="quota-labels"><span>BPJS</span><span id="lbl-bpjs">-</span></div>
+                    <div class="progress-bg"><div class="progress-fill" id="bar-bpjs"></div></div>
+                </div>
+                <div class="quota-bar-container">
+                    <div class="quota-labels"><span>Umum (Mandiri)</span><span id="lbl-um">-</span></div>
+                    <div class="progress-bg"><div class="progress-fill" id="bar-um"></div></div>
+                </div>
+                <div class="quota-bar-container">
+                    <div class="quota-labels"><span>Asuransi Swasta</span><span id="lbl-asu">-</span></div>
+                    <div class="progress-bg"><div class="progress-fill" id="bar-asu"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // LOGIKA VALIDASI KUOTA DAN STATUS
+        let KUOTA_DATA = {};
+
+        async function ambilKuotaStatus(){
+            try{
+                const res = await fetch('/api/kuota_status');
+                KUOTA_DATA = await res.json();
+                updateKuotaValidasi();
+            }catch(err){
+                console.log('Gagal ambil kuota', err);
+            }
+        }
+
+        function updateKuotaValidasi(){
+            const jalurSelect = document.getElementById('jalur');
+            const warningDiv = document.getElementById('kuota-warning');
+            const lanjutBtn = document.getElementById('btn-step2');
+            const jalurTerpilih = jalurSelect.value;
+
+            if(jalurTerpilih){
+                if(warningDiv) warningDiv.style.display = 'none';
+                if(lanjutBtn){ lanjutBtn.disabled = false; lanjutBtn.style.background = '#3b82f6'; lanjutBtn.style.cursor = 'pointer'; }
+            } else {
+                if(warningDiv) warningDiv.style.display = 'none';
+                if(lanjutBtn){ lanjutBtn.disabled = true; lanjutBtn.style.background = '#94a3b8'; lanjutBtn.style.cursor = 'not-allowed'; }
+            }
+        }
+
+        document.getElementById('jalur').addEventListener('change', updateKuotaValidasi);
+        ambilKuotaStatus();
+        setInterval(ambilKuotaStatus, 5000);
+
+        // LOGIKA NAVIGASI FORM MULTI-STEP
+        function keStep2() {
+            const form = document.getElementById('pendaftaran-form');
+            if(form.reportValidity()) {
+                document.getElementById('step-1').classList.remove('active');
+                document.getElementById('step-2').classList.add('active');
+            }
+        }
+        function keStep3() {
+            document.getElementById('step-2').classList.remove('active');
+            document.getElementById('step-3').classList.add('active');
+        }
+        function kembaliKe(step) {
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+        }
+
+        // FUNGSI PENGIRIMAN DATA KE BACKEND
+        function prosesDarurat() { kirimData(true); }
+        function prosesNormal() { kirimData(false); }
+
+        async function kirimData(isDarurat) {
+            // 1. AMBIL SEMUA CHECKBOX YANG DICENTANG
+            const keluhanChecked = Array.from(document.querySelectorAll('input[name="keluhan"]:checked')).map(cb => cb.value);
+
+            // 2. TAMBAH KELUHAN LAINNYA JIKA DIISI
+            const keluhanLain = document.getElementById('keluhan_lain').value.trim();
+            if(keluhanLain && keluhanChecked.includes('Lainnya')){
+                keluhanChecked.push(keluhanLain);
+            }
+
+            const payload = {
+                nama: document.getElementById('nama').value,
+                umur: document.getElementById('umur').value,
+                jalur: document.getElementById('jalur').value,
+                is_darurat: isDarurat,
+                keluhan: keluhanChecked // Kirim sebagai array
+            };
+
+            try {
+                const r = await fetch('/api/daftar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await r.json();
+
+                if(data.sukses) { tampilkanStruk(data); }
+                else { alert(data.msg); }
+            } catch (err) { alert("Gangguan koneksi sistem."); }
+        }
+
+        // RENDER TAMPILAN STRUK BERDASARKAN KONDISI
+        function tampilkanStruk(data) {
+            document.getElementById('form-card').style.display = 'none';
+            document.getElementById('receipt-card').style.display = 'block';
+
+            const rcpt = document.getElementById('receipt');
+            const judul = document.getElementById('r-judul');
+            const pesan = document.getElementById('r-pesan');
+            const labelRuang = document.getElementById('r-ruang-label');
+            const nilaiRuang = document.getElementById('r-poli');
+            const boxEstimasi = document.getElementById('box-estimasi');
+            const nomorEl = document.getElementById('r-nomor');
+
+            document.getElementById('r-waktu').innerText = data.waktu_daftar || '-';
+            document.getElementById('r-nama').innerText = data.nama;
+            document.getElementById('r-umur').innerText = data.umur;
+            document.getElementById('r-jalur').innerText = data.jalur;
+            document.getElementById('r-keluhan').innerText = data.keluhan;
+            document.getElementById('r-estimasi').innerText = data.estimasi;
+            document.getElementById('r-qr').src = data.qr_url;
+            nomorEl.innerText = data.nomor_antrian;
+
+            if(data.is_darurat) {
+                rcpt.classList.add('receipt-darurat');
+                judul.innerText = "🚨 JALUR PRIORITAS IGD";
+                judul.style.color = "var(--danger)";
+                labelRuang.innerText = "Status";
+                nilaiRuang.innerText = "DARURAT";
+                nilaiRuang.style.color = "var(--danger)";
+                nomorEl.classList.add('nomor-darurat');
+                nomorEl.classList.remove('nomor-besar');
+                boxEstimasi.style.display = 'none';
+                pesan.innerText = data.pesan_khusus;
+                pesan.style.backgroundColor = "#fee2e2";
+                pesan.style.color = "#991b1b";
+            } else {
+                rcpt.classList.remove('receipt-darurat');
+                judul.innerText = "BERHASIL MENDAFTAR";
+                judul.style.color = "var(--primary)";
+                labelRuang.innerText = "Ruang / Loket";
+                nilaiRuang.innerText = data.poli;
+                nilaiRuang.style.color = "#0f172a";
+                nomorEl.classList.remove('nomor-darurat');
+                nomorEl.classList.add('nomor-besar');
+                boxEstimasi.style.display = 'flex';
+                pesan.innerText = data.pesan_khusus;
+                pesan.style.backgroundColor = "#e0f2fe";
+                pesan.style.color = "#0369a1";
+            }
+
+            rcpt.style.display = 'block';
+            SinkronisasiData();
+        }
+
+        function resetFormSeluruhnya() {
+            sessionStorage.clear();
+            document.getElementById('pendaftaran-form').reset();
+            document.getElementById('receipt-card').style.display = 'none';
+            document.getElementById('form-card').style.display = 'block';
+            kembaliKe(1);
+        }
+
+        async function SinkronisasiData() {
+            try {
+                const [statusRes, quotaRes] = await Promise.all([
+                    fetch('/api/status_all'),
+                    fetch('/api/kuota_status')
+                ]);
+                const d = await statusRes.json();
+                const q = await quotaRes.json();
+
+                const polis = [
+                    { key: 'Poli Umum', live: 'live-umum' },
+                    { key: 'Poli Anak', live: 'live-anak' },
+                    { key: 'Poli Lansia', live: 'live-lansia' }
+                ];
+
+                polis.forEach(item => {
+                    const data = d[item.key];
+                    if (!data) return;
+                    const liveEl = document.getElementById(item.live);
+                    if (liveEl) liveEl.innerText = data.sekarang;
+                });
+
+                const igdRegistered = (d['IGD (DARURAT)']?.registered || 0) + (d['IGD (GEJALA BERAT)']?.registered || 0);
+                const igdMax = 5;
+                const igdRemaining = Math.max(0, igdMax - igdRegistered);
+                const igdEl = document.getElementById('live-igd');
+                if (igdEl) igdEl.innerText = `${igdRemaining}/${igdMax}`;
+                const igdMsg = document.getElementById('msg-igd');
+                if (igdMsg) {
+                    if (igdRemaining <= 0) {
+                        igdMsg.innerText = 'IGD penuh. Silakan hubungi petugas.';
+                        igdMsg.classList.add('show');
+                    } else {
+                        igdMsg.innerText = '';
+                        igdMsg.classList.remove('show');
+                    }
+                }
+
+                const jalurMap = [
+                    { key: 'BPJS', label: 'lbl-bpjs', bar: 'bar-bpjs' },
+                    { key: 'UM', label: 'lbl-um', bar: 'bar-um' },
+                    { key: 'ASURANSI', label: 'lbl-asu', bar: 'bar-asu' }
+                ];
+
+                jalurMap.forEach(item => {
+                    const dataJalur = q[item.key];
+                    if (!dataJalur) return;
+                    const labelEl = document.getElementById(item.label);
+                    const barEl = document.getElementById(item.bar);
+                    if (labelEl) labelEl.innerText = `${dataJalur.sisa} Sisa / ${dataJalur.kuota_max} Kuota`;
+                    if (barEl) barEl.style.width = (dataJalur.terpakai / dataJalur.kuota_max * 100) + '%';
+                });
+            } catch (e) { console.log("Menunggu sinkronisasi..."); }
+        }
+
+        SinkronisasiData();
+        setInterval(SinkronisasiData, 3000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Dokter - Bina Sehat</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+
+        *{
+            box-sizing:border-box;
+        }
+
+        body{
+            margin:0;
+            font-family:'Poppins', 'Segoe UI', sans-serif;
+            background:transparent;
+            color:#0f172a;
+        }
+
+        .header{
+            background:white;
+            padding:20px 25px;
+            border-radius:16px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+            box-shadow:0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .header h1{
+            margin:0;
+            color:#22c55e;
+            font-size:24px;
+        }
+
+        .btn-logout{
+            text-decoration:none;
+            background:#ef4444;
+            color:white;
+            padding:10px 16px;
+            border-radius:10px;
+            font-weight:bold;
+            transition:0.2s;
+        }
+
+        .btn-logout:hover{
+            background:#d32a2a;
+        }
+
+        .stats-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:18px;
+            margin-bottom:25px;
+        }
+
+        .stat-card{
+            background:white;
+            border-radius:16px;
+            padding:25px;
+            box-shadow:0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .stat-card h3{
+            margin:0;
+            color:#64748b;
+            font-size:14px;
+        }
+
+        .stat-card .num{
+            margin-top:12px;
+            font-size:34px;
+            font-weight:800;
+            color:#0f172a;
+        }
+
+        .table-card{
+            background:white;
+            border-radius:16px;
+            padding:20px;
+            box-shadow:0 4px 15px rgba(0,0,0,0.05);
+            overflow-x:auto;
+        }
+
+        .table-title{
+            margin-top:0;
+            margin-bottom:20px;
+            color:#0f172a;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th{
+            background:#22c55e;
+            color:white;
+            padding:14px;
+            text-align:left;
+            font-size:14px;
+        }
+
+        td{
+            padding:14px;
+            border-bottom:1px solid #e2e8f0;
+            font-size:14px;
+        }
+
+        tr:hover{
+            background:#f8fafc;
+        }
+
+        .badge{
+            display:inline-block;
+            padding:5px 10px;
+            border-radius:8px;
+            font-size:12px;
+            font-weight:bold;
+        }
+
+        .badge.igd{
+            background:#fee2e2;
+            color:#991b1b;
+        }
+
+        .badge.waiting{
+            background:#fef9c3;
+            color:#92400e;
+        }
+
+        .badge.called{
+            background:#dbeafe;
+            color:#1d4ed8;
+        }
+
+        .btn-selesai{
+            background:#3b82f6;
+            color:white;
+            border:none;
+            padding:10px 14px;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+            transition:0.2s;
+        }
+
+        .btn-selesai:hover{
+            background:#2563eb;
+        }
+
+        .empty{
+            text-align:center;
+            color:#64748b;
+            padding:30px;
+        }
+
+        @media(max-width:768px){
+
+            .header{
+                flex-direction:column;
+                gap:15px;
+                align-items:flex-start;
+            }
+
+            .header h1{
+                font-size:20px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+
+    <header class="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.35em] text-teal-600">Dashboard Dokter</p>
+          <h1 class="mt-2 text-2xl font-bold tracking-tight text-slate-900">Dashboard Dokter - Bina Sehat</h1>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <button id="history-toggle" class="inline-flex items-center justify-center rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200">Riwayat</button>
+            <div id="history-panel" class="hidden absolute right-0 mt-2 w-80 rounded-lg bg-white p-3 shadow-lg border border-slate-200 z-50">
+              <div id="history-content" class="space-y-2 text-sm text-slate-700">Memuat riwayat...</div>
+            </div>
+          </div>
+          <a href="/logout" class="inline-flex items-center justify-center rounded-full bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-rose-500/20 transition hover:bg-rose-700">Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="mx-auto max-w-7xl px-6 py-8 lg:px-8">
+      <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+        <article class="rounded-[32px] border border-slate-200/70 bg-white p-5 shadow-sm shadow-slate-200/30">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Total Pasien Dilayani</p>
+              <p class="mt-4 text-3xl font-bold text-slate-900" data-stat-total>{{ kuota.total }}</p>
+            </div>
+            <div class="rounded-3xl bg-teal-100 p-3 text-teal-700">
+              <span class="text-xl">✅</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="rounded-[32px] border border-slate-200/70 bg-white p-5 shadow-sm shadow-slate-200/30">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Pasien Poli Umum</p>
+              <p class="mt-4 text-3xl font-bold text-slate-900" data-stat-umum>{{ kuota.umum }}</p>
+            </div>
+            <div class="rounded-3xl bg-sky-100 p-3 text-sky-700">
+              <span class="text-xl">🩺</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="rounded-[32px] border border-slate-200/70 bg-white p-5 shadow-sm shadow-slate-200/30">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Pasien Poli Anak</p>
+              <p class="mt-4 text-3xl font-bold text-slate-900" data-stat-anak>{{ kuota.anak }}</p>
+            </div>
+            <div class="rounded-3xl bg-amber-100 p-3 text-amber-700">
+              <span class="text-xl">👶</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="rounded-[32px] border border-slate-200/70 bg-white p-5 shadow-sm shadow-slate-200/30">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Pasien Poli Lansia</p>
+              <p class="mt-4 text-3xl font-bold text-slate-900" data-stat-lansia>{{ kuota.lansia }}</p>
+            </div>
+            <div class="rounded-3xl bg-violet-100 p-3 text-violet-700">
+              <span class="text-xl">👵</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="rounded-[32px] border border-slate-200/70 bg-white p-5 shadow-sm shadow-slate-200/30">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Pasien IGD</p>
+              <p class="mt-4 text-3xl font-bold text-slate-900" data-stat-igd>{{ kuota.igd }}</p>
+            </div>
+            <div class="rounded-3xl bg-rose-100 p-3 text-rose-700">
+              <span class="text-xl">🚑</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-6 pb-10 lg:px-8">
+      <div class="rounded-[32px] border border-slate-200/70 bg-white p-6 shadow-sm shadow-slate-200/30">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 class="text-xl font-semibold text-slate-900">Daftar Antrean Menunggu</h2>
+            <p class="mt-2 text-sm text-slate-500">Lihat pasien yang menunggu dan kelola panggilan dari panel ini.</p>
+          </div>
+          <div class="inline-flex items-center gap-3 rounded-full bg-slate-50 px-4 py-2 text-sm text-slate-600">
+            <span class="h-2.5 w-2.5 rounded-full bg-orange-300"></span>
+            Menunggu
+            <span class="h-2.5 w-2.5 rounded-full bg-sky-200"></span>
+            Sudah dipanggil
+          </div>
+        </div>
+
+        <div class="mt-6 overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+            <thead class="bg-white">
+              <tr class="text-xs uppercase tracking-[0.2em] text-slate-500">
+                <th class="px-4 py-4">No Antrean</th>
+                <th class="px-4 py-4">Nama Pasien</th>
+                <th class="px-4 py-4">Umur</th>
+                <th class="px-4 py-4">Poli</th>
+                <th class="px-4 py-4">Waktu</th>
+                <th class="px-4 py-4">Status</th>
+                <th class="px-4 py-4">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="queue-body" class="divide-y divide-slate-200 bg-slate-50">
+
+                {% for p in antrean %}
+
+              <tr class="odd:bg-white even:bg-slate-50 {% if 'IGD' in p.poli %}!bg-rose-50{% endif %}">
+                <td class="px-4 py-4 font-semibold text-slate-900">{{ p.nomor_antrian }}</td>
+                <td class="px-4 py-4 text-slate-700">{{ p.nama }} <span class="text-slate-400">({{ p.jalur }})</span></td>
+                <td class="px-4 py-4 text-slate-700">{{ p.umur }} Tahun</td>
+                <td class="px-4 py-4">
+                  {% if 'IGD' in p.poli %}
+                    <span class="rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700">{{ p.poli }}</span>
+                  {% else %}
+                    <span class="text-slate-700">{{ p.poli }}</span>
+                  {% endif %}
+                </td>
+                <td class="px-4 py-4 text-slate-600">{{ p.waktu_daftar }}</td>
+                <td class="px-4 py-4">
+                  {% if p.status == 'waiting' %}
+                    <span class="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-800">Menunggu</span>
+                  {% elif p.status == 'called' %}
+                    <span class="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">Sudah dipanggil</span>
+                  {% else %}
+                    <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Selesai</span>
+                  {% endif %}
+                </td>
+                <td class="px-4 py-4">
+                  <div class="flex flex-wrap gap-2">
+                    <button class="inline-flex items-center justify-center rounded-full bg-sky-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-sky-700" onclick="panggilPasien('{{ p.nomor_antrian }}')">
+                      {% if p.status == 'waiting' %}Panggil{% else %}Panggil Ulang{% endif %}
+                    </button>
+                    <button class="inline-flex items-center justify-center rounded-full bg-emerald-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700" onclick="tandaiSelesai('{{ p.nomor_antrian }}')">
+                      Tandai Selesai
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+            {% else %}
+              <tr>
+                <td colspan="7" class="px-4 py-8 text-center text-sm text-slate-500">Tidak ada pasien dalam antrean</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="hidden !bg-rose-50"></div>
+    </section>
+
+    <script>
+
+        function speak(text, onEnd) {
+            if ('speechSynthesis' in window) {
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.lang = 'id-ID';
+                msg.rate = 0.9;
+                if (typeof onEnd === 'function') {
+                    msg.onend = onEnd;
+                }
+                window.speechSynthesis.speak(msg);
+                return;
+            }
+            if (typeof onEnd === 'function') {
+                onEnd();
+            }
+        }
+
+        async function panggilPasien(nomorAntrian){
+            try{
+              const res = await fetch('/api/admin/panggil', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nomor_antrian: nomorAntrian })
+              });
+              if (res.status === 401) {
+                // not authenticated - redirect to login
+                location.href = '/login';
+                return;
+              }
+              const result = await res.json();
+              if(result.sukses){
+                speak(`Nomor antrean ${result.nomor_antrian.replace('-', ' ')} silakan menuju ke ${result.poli}`, () => {
+                  location.reload();
+                });
+              } else {
+                alert(result.msg || 'Gagal memanggil pasien');
+              }
+            } catch (err) {
+              alert('Terjadi kesalahan jaringan saat memanggil pasien');
+            }
+        }
+
+        // History toggle and fetch
+        async function fetchHistory(){
+          try{
+            const res = await fetch('/api/admin/history');
+            if (res.status === 401) { location.href = '/login'; return null; }
+            const data = await res.json();
+            return data;
+          }catch(err){
+            return null;
+          }
+        }
+
+        document.addEventListener('click', function(e){
+          const panel = document.getElementById('history-panel');
+          const btn = document.getElementById('history-toggle');
+          if(!panel || !btn) return;
+          if(!panel.classList.contains('hidden') && !panel.contains(e.target) && e.target !== btn){
+            panel.classList.add('hidden');
+          }
+        });
+
+        document.getElementById && document.getElementById('history-toggle') && document.getElementById('history-toggle').addEventListener('click', async function (e) {
+            const panel = document.getElementById('history-panel');
+            if (panel.classList.contains('hidden')) {
+                const data = await fetchHistory();
+                const content = document.getElementById('history-content');
+                if (!data || !data.sukses) {
+                    content.innerText = 'Gagal memuat riwayat';
+                } else if (!data.history.length) {
+                    content.innerText = 'Belum ada pasien selesai hari ini.';
+                } else {
+                    content.innerHTML = data.history.map(h => `
+                        <div class="flex items-start justify-between border-b border-slate-100 pb-2">
+                          <div>
+                            <div class="font-semibold text-slate-800">${h.nomor_antrian} — ${h.nama}</div>
+                            <div class="text-xs text-slate-500">${h.poli} • ${h.waktu_daftar}</div>
+                          </div>
+                        </div>
+                    `).join('');
+                }
+                panel.classList.remove('hidden');
+            } else {
+                panel.classList.add('hidden');
+            }
+        });
+
+        async function refreshAdminData(){
+          try{
+            const res = await fetch('/api/admin/queue');
+            if (res.status === 401) { location.href = '/login'; return; }
+            const data = await res.json();
+            if(!data.sukses) return;
+
+            document.querySelector('[data-stat-total]').innerText = data.kuota.total;
+            document.querySelector('[data-stat-umum]').innerText = data.kuota.umum;
+            document.querySelector('[data-stat-anak]').innerText = data.kuota.anak;
+            document.querySelector('[data-stat-lansia]').innerText = data.kuota.lansia;
+            document.querySelector('[data-stat-igd]').innerText = data.kuota.igd;
+
+            const body = document.getElementById('queue-body');
+            if(!data.antrean.length){
+              body.innerHTML = `
+                <tr>
+                  <td colspan="7" class="px-4 py-8 text-center text-sm text-slate-500">Tidak ada pasien dalam antrean</td>
+                </tr>
+              `;
+              return;
+            }
+
+            body.innerHTML = data.antrean.map(p => {
+                    const statusLabel = p.status === 'waiting'
+                        ? '<span class="rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-800">Menunggu</span>'
+                        : '<span class="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">Sudah dipanggil</span>';
+                    const panggilText = p.status === 'waiting' ? 'Panggil' : 'Panggil Ulang';
+                    const poliLabel = p.poli.includes('IGD')
+                        ? `<span class="rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700">${p.poli}</span>`
+                        : `<span class="text-slate-700">${p.poli}</span>`;
+                    return `
+                        <tr class="odd:bg-white even:bg-slate-50 ${p.poli.includes('IGD') ? '!bg-rose-50' : ''}">
+                            <td class="px-4 py-4 font-semibold text-slate-900">${p.nomor_antrian}</td>
+                            <td class="px-4 py-4 text-slate-700">${p.nama} <span class="text-slate-400">(${p.jalur})</span></td>
+                            <td class="px-4 py-4 text-slate-700">${p.umur} Tahun</td>
+                            <td class="px-4 py-4">${poliLabel}</td>
+                            <td class="px-4 py-4 text-slate-600">${p.waktu_daftar}</td>
+                            <td class="px-4 py-4">${statusLabel}</td>
+                            <td class="px-4 py-4">
+                                <div class="flex flex-wrap gap-2">
+                                    <button class="inline-flex items-center justify-center rounded-full bg-sky-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-sky-700" onclick="panggilPasien('${p.nomor_antrian}')">${panggilText}</button>
+                                    <button class="inline-flex items-center justify-center rounded-full bg-emerald-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700" onclick="tandaiSelesai('${p.nomor_antrian}')">Tandai Selesai</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+            }catch(err){
+              console.log('Gagal refresh admin data', err);
+            }
+        }
+
+        async function tandaiSelesai(nomorAntrian){
+          try{
+            const res = await fetch('/api/cek_dokter', {
+              method:'POST',
+              headers:{ 'Content-Type':'application/json' },
+              body:JSON.stringify({ nomor_antrian:nomorAntrian })
+            });
+            if (res.status === 401) { location.href = '/login'; return; }
+            const result = await res.json();
+            if(result.sukses){
+              // update UI quickly without reload
+              refreshAdminData();
+            }else{
+              alert(result.msg || 'Gagal memperbarui status');
+            }
+          }catch(err){
+            alert('Terjadi kesalahan jaringan');
+          }
+        }
+
+        refreshAdminData();
+        setInterval(refreshAdminData, 5000);
+
+    </script>
+
+</body>
+</html>
